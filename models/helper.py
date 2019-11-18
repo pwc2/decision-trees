@@ -8,18 +8,62 @@
 """
 
 from collections import Counter
+import numpy as np
 
 
-def calc_gini(pos_count, neg_count):
+def _calc_gini(pos_count, neg_count):
     total = pos_count + neg_count
+    if total == 0:
+        return 0
     gini = 1 - (pos_count / total) ** 2 - (neg_count / total) ** 2
     return gini
 
 
-def get_split_prob(pos_count, neg_count, total_count):
+def _get_split_prob(pos_count, neg_count, total_count):
     prob = (pos_count + neg_count) / total_count
     return prob
 
+
+def _predict(tree, X):
+    """Generates predictions for class labels on training, validation, or test sets.
+
+    Args:
+        tree (DecisionTree): learned decision tree.
+        X (ndarray): examples to generate predictions on.
+
+    Returns:
+        predictions (list): list of generated predictions.
+    """
+    predictions = []
+    # Iterate through new observations and generate predictions
+    for i in range(np.size(X, axis=0)):
+        observation = X[i, :]
+        node = tree
+        while node.left is not None:
+            if observation[node.feature_index] == 1:
+                node = node.left
+            else:
+                node = node.right
+        predictions.append(node.predicted_class)
+    return predictions
+
+
+def _accuracy(predictions, labels):
+    """Calculate accuracy of decision tree.
+
+    Args:
+        predictions (list or ndarray): list or ndarray of class predictions in {0, 1}
+        labels (list or ndarray): list or ndarray of true class labels.
+
+    Returns:
+        accuracy (float): calculated accuracy.
+    """
+    # Ensure lists are coerced to ndarrays of integers.
+    predictions = np.array(predictions, dtype=int)
+    labels = np.array(labels, dtype=int)
+    correct = (labels == predictions)
+    acc = correct.sum() / np.size(correct)
+    return acc
 
 # def get_split_benefit(feature, labels):
 #     # Get total counts for positive and negative classes in dataset
