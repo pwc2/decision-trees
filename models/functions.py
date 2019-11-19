@@ -36,9 +36,7 @@ def _predict(tree, X):
         predictions (list): list of generated predictions.
     """
     predictions = []
-    # for i in range(np.size(X, axis=0)):
     for observation in X:
-        # observation = X[i, :]
         node = tree
         while node.left is not None:
             if observation[node.feature_index] == 1:
@@ -47,6 +45,40 @@ def _predict(tree, X):
                 node = node.right
         predictions.append(node.predicted_class)
     return predictions
+
+
+def _predict_rf(trees, X):
+    """Generates predictions from RandomForest for class labels on training, validation, or test sets using majority
+    vote from ensemble of trees.
+
+    Args:
+        trees (list of DecisionTree): list of learned decision trees from random forest.
+        X (ndarray): examples to generate predictions on.
+
+    Returns:
+        rf_predictions (list): list of generated predictions from majority vote.
+    """
+    # Store predictions for each tree.
+    predictions = []
+    for tree in trees:
+        tree_predictions = []
+        for observation in X:
+            node = tree
+            while node.left is not None:
+                if observation[node.feature_index] == 1:
+                    node = node.left
+                else:
+                    node = node.right
+            tree_predictions.append(node.predicted_class)
+        predictions.append(tree_predictions)
+
+    # Zip together predictions for each instance from each tree to take majority vote.
+    zipped = list(zip(*predictions))
+    # Get tuple with number of votes for each class, i.e. (3, 2) means 3 votes for 0 and 2 votes for 1.
+    class_votes = [(item.count(0), item.count(1)) for item in zipped]
+    # Generate list with predictions based on majority vote.
+    rf_predictions = [int(np.argmax(item)) for item in class_votes]
+    return rf_predictions
 
 
 def _accuracy(predictions, labels):

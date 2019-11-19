@@ -7,39 +7,16 @@
 
 """
 import numpy as np
-from models.functions import _gini, _predict, _accuracy
+from models.functions import _gini, _predict_rf, _accuracy
+from models.node import Node
 import random
-
-class Node:
-    """Class to construct node object for decision tree.
-
-    """
-
-    def __init__(self, n, class_distribution, gini_index):
-        """Constructs node object with number of observations at node, a list with the count of observations in each
-        class at node, and gini impurity at node.
-
-        Args:
-            n (int): sample size of data at node.
-            class_distribution (list): list with the number of observations in each class (0 and 1) at node.
-            gini_index (float): gini impurity at node.
-
-        Returns:
-            None
-        """
-        self.n = n
-        self.class_distribution = class_distribution
-        self.gini_index = gini_index
-        self.predicted_class = int(np.argmax(self.class_distribution))
-        self.feature_index = None
-        self.left = None
-        self.right = None
 
 
 class RandomForest:
     """Class to construct RandomForest object.
 
     """
+
     def __init__(self, train, validation, test, label, n_trees, n_features, seed=1, max_depth=None):
         """Constructs RandomForest object.
 
@@ -58,19 +35,20 @@ class RandomForest:
         """
         random.seed(seed)
         # Extract features and labels from data sets
+        self.train_set = train
         self.train_features = train.drop(label, axis=1)
         self.train_labels = train[label]
         self.validation_features = validation.drop(label, axis=1)
         self.validation_labels = validation[label]
-        self.test_features = test
+        self.test_set = test
 
         self.n_classes = len(set(self.train_labels))
         self.n_features = np.size(self.train_features.to_numpy(), axis=1)
         self.n_samples = np.size(self.train_features.to_numpy(), axis=0)
         self.n_trees = n_trees
-        self.n_features = n_features
+        self.m = n_features
         self.max_depth = max_depth
-        self.tree = None
+        self.trees = None
 
     def predict(self, X):
         """Generate predictions on training, validation or test set.
@@ -81,7 +59,7 @@ class RandomForest:
         Returns:
             predictions (list): list of generated predictions.
         """
-        predictions = _predict(self.tree, X)
+        predictions = _predict_rf(self.trees, X)
         return predictions
 
     def train(self):
@@ -96,8 +74,17 @@ class RandomForest:
         X_val = self.validation_features.to_numpy()
         y_val = self.validation_labels.to_numpy()
 
-        # Learn decision tree.
-        self.tree = self.fit_tree(X_train, y_train, depth=0)
+        self.trees = []
+
+        for _ in range(self.n_trees):
+            # Generate random sample with replacement from training set.
+            train_sample = np.array(random.choices(self.train_set.to_numpy(), k=self.n_samples))
+            X_sample = train_sample[:, :-1]
+            y_sample = train_sample[:, -1]
+
+            # Learn decision tree from sampled training data.
+            tree = self.fit_tree(X_sample, y_sample, depth=0)
+            self.trees.append(tree)
 
         # Calculate predictions and accuracy on train and validation sets.
         train_predictions = self.predict(X_train)
@@ -106,10 +93,12 @@ class RandomForest:
         val_accuracy = _accuracy(val_predictions, y_val)
 
         results = {'max_depth': self.max_depth,
+                   'n_trees': self.n_trees,
+                   'n_features': self.m,
                    'train_accuracy': train_accuracy,
                    'val_accuracy': val_accuracy,
                    'train_predictions': train_predictions,
-                   'val_predictions': val_predictions, }
+                   'val_predictions': val_predictions}
         return results
 
     def fit_tree(self, X, y, depth=0):
@@ -161,9 +150,12 @@ class RandomForest:
 
         current_gini = _gini(y, self.n_classes)
 
+        # Sample features without replacement to find best split on.
+        random_features = random.sample([idx for idx in range(self.n_features)], self.m)
+
         # Iterate through all features and calculate gini impurity from resulting split.
         split_index = None
-        for index in range(self.n_features):
+        for index in random_features:
             feature = X[:, index]
 
             # Get indices to go to left child if feature value is 1, otherwise right child.
@@ -195,37 +187,3 @@ class RandomForest:
                 current_gini = split_gini
                 split_index = index
         return current_gini, split_index
-
-
-# class RandomForest:
-#     """Class to construct RandomForest object.
-#
-#     """
-#     def __init__(self, train, validation, test, label, n_trees, n_features, max_depth=None):
-#         """Constructs RandomForest object.
-#
-#         Args:
-#             train (DataFrame): DataFrame with training set observations.
-#             validation (DataFrame): DataFrame with validation set observations.
-#             test (DataFrame): DataFrame with test set observations.
-#             n_trees (int) : number of trees to generate in random forest.
-#             n_features (int) : number of features to randomly sample to build trees.
-#             label (str): String with column name for class labels in train and validation sets.
-#             max_depth (int): Maximum depth to grow decision tree to.
-#
-#         Returns:
-#             None
-#         """
-#         # Extract features and labels from data sets
-#         self.train_features = train.drop(label, axis=1)
-#         self.train_labels = train[label]
-#         self.validation_features = validation.drop(label, axis=1)
-#         self.validation_labels = validation[label]
-#         self.test_features = test
-#
-#         self.n_classes = len(set(self.train_labels))
-#         self.n_features = np.size(self.train_features.to_numpy(), axis=1)
-#         self.n_trees = n_trees
-#         self.n_features = n_features
-#         self.max_depth = max_depth
-#         self.tree = None
