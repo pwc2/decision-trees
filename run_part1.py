@@ -18,7 +18,7 @@ train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
 test_set = pd.read_csv('data/pa3_test.csv')
 
-# Create trees with depths from 1 to 8 inclusive and save classification results in /model_output.
+# Create trees with depths from 1 to 8 inclusive and save results in /model_output.
 for depth in range(1, 9):
     tree = DecisionTree(train_set, validation_set, test_set, label='class', max_depth=depth)
     results = tree.train()

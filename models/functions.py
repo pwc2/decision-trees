@@ -7,6 +7,8 @@
 
 """
 
+import random
+
 import numpy as np
 
 
@@ -76,8 +78,8 @@ def _predict_rf(trees, X):
     zipped = list(zip(*predictions))
     # Get tuple with number of votes for each class, i.e. (3, 2) means 3 votes for 0 and 2 votes for 1.
     class_votes = [(item.count(0), item.count(1)) for item in zipped]
-    # Generate list with predictions based on majority vote.
-    rf_predictions = [int(np.argmax(item)) for item in class_votes]
+    # Generate list with predictions based on majority vote, if tie randomly generate value in {0, 1}.
+    rf_predictions = [int(np.argmax(item)) if item[0] != item[1] else random.randint(0, 1) for item in class_votes]
     return rf_predictions
 
 

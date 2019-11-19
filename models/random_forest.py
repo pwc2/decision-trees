@@ -150,8 +150,8 @@ class RandomForest:
 
         current_gini = _gini(y, self.n_classes)
 
-        # Sample features without replacement to find best split on.
-        random_features = random.sample([idx for idx in range(self.n_features)], self.m)
+        # Sample indices for features without replacement to find best split on.
+        random_features = random.sample([idx for idx in range(self.n_features)], k=self.m)
 
         # Iterate through all features and calculate gini impurity from resulting split.
         split_index = None
