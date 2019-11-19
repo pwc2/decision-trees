@@ -105,7 +105,7 @@ class DecisionTree:
             gini_index, split_index = self.get_split(X, y)
             # Get indices for data and class labels to go to the left child, send the rest to the right child.
             if split_index is not None:
-                index_left = X[:, split_index] == 1
+                index_left = (X[:, split_index] == 1)
                 X_left, y_left = X[index_left], y[index_left]
                 X_right, y_right = X[~index_left], y[~index_left]
                 tree.gini_index = gini_index
@@ -137,7 +137,7 @@ class DecisionTree:
             feature = X[:, index]
 
             # Get indices to go to left child if feature value is 1, otherwise right child.
-            left_idx = feature == 1
+            left_idx = (feature == 1)
             left_y = y[left_idx]
             right_y = y[~left_idx]
 

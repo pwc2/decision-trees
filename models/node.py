@@ -14,13 +14,14 @@ class Node:
 
     """
 
-    def __init__(self, n, class_distribution, gini_index):
+    def __init__(self, n, class_distribution, gini_index, boost=False):
         """Constructs node object with number of observations at node, a list with the count of observations in each
         class at node, and gini impurity at node.
 
         Args:
             n (int): sample size of data at node.
-            class_distribution (list): list with the number of observations in each class (0 and 1) at node.
+            class_distribution (list): list with the count of observations in each class (0 and 1) at node,
+            or for boosted trees a list with the sum of the weights in each class (0 and 1).
             gini_index (float): gini impurity at node.
 
         Returns:

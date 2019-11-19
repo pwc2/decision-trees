@@ -18,6 +18,8 @@ def _gini(y, n_classes):
     Args:
         y (ndarray): labels for data at node.
         n_classes (int): number of classes.
+        boosted (bool): indicator for using boosted trees.
+        class_weights (list): if using boosted trees, list of total weight in each class at node.
 
     Returns:
         gini_index (float): computed gini index.
@@ -71,6 +73,29 @@ def _predict_rf(trees, X):
     # Generate list with predictions based on majority vote, if tie randomly generate value in {0, 1}.
     rf_predictions = [int(np.argmax(item)) if item[0] != item[1] else random.randint(0, 1) for item in class_votes]
     return rf_predictions
+
+
+def _predict_adaboost(clfs, clf_alphas, X):
+    """Generates predictions from boosted trees (AdaBoost) for class labels on training, validation, or test sets.
+
+    Args:
+        clfs (list): list of trained base classifiers.
+        clf_alphas (list): list of alphas from trained base classifiers.
+        X (ndarray): examples to generate predictions on.
+
+    Returns:
+        predictions (list): list of predicted values.
+    """
+    N = np.size(X, axis=0)
+    y = np.zeros(N)
+    for (clf, alpha) in zip(clfs, clf_alphas):
+        preds = _predict(clf, X)
+        preds = np.array([-1 if y == 0 else 1 for y in preds])
+        y = y + alpha * preds
+    predictions = list(np.sign(y))
+    # Convert class labels from {-1, 1} back to {0, 1}.
+    predictions = [0 if y == -1 else 1 for y in predictions]
+    return predictions
 
 
 def _accuracy(predictions, labels):
