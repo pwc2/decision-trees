@@ -127,7 +127,7 @@ class BoostedTrees:
         Returns:
             tree (Node): root node of learned decision tree.
         """
-        # Get sum of weights from each class (0 and 1) in current node.
+        # Get sum of weights from each class for the class distribution in current node.
         D = weights
         class_weights = [np.sum(D * (y == i)) for i in range(self.n_classes)]
 
@@ -167,7 +167,7 @@ class BoostedTrees:
         if y.size <= 1:
             return None, None
 
-        # Get sum of weights from each class (0 and 1) in current node.
+        # Get sum of weights from each class for the class distribution in current node.
         D = weights
         class_weights = [np.sum(D * (y == i)) for i in range(self.n_classes)]
 
