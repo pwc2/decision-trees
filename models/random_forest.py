@@ -33,6 +33,7 @@ class RandomForest:
         Returns:
             None
         """
+        random.seed(seed)
         # Extract features and labels from data sets
         self.train_set = train
         self.train_features = train.drop(label, axis=1)
@@ -49,8 +50,6 @@ class RandomForest:
         self.seed = seed
         self.max_depth = max_depth
         self.trees = None
-
-        random.seed(self.seed)
 
     def predict(self, X):
         """Generate predictions on training, validation or test set.
@@ -97,7 +96,7 @@ class RandomForest:
         results = {'max_depth': self.max_depth,
                    'n_trees': self.n_trees,
                    'n_features': self.m,
-                   'random_seed' : self.seed,
+                   'random_seed': self.seed,
                    'train_accuracy': train_accuracy,
                    'val_accuracy': val_accuracy,
                    'train_predictions': train_predictions,
