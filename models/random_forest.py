@@ -33,7 +33,6 @@ class RandomForest:
         Returns:
             None
         """
-        random.seed(seed)
         # Extract features and labels from data sets
         self.train_set = train
         self.train_features = train.drop(label, axis=1)
@@ -47,8 +46,11 @@ class RandomForest:
         self.n_samples = np.size(self.train_features.to_numpy(), axis=0)
         self.n_trees = n_trees
         self.m = n_features
+        self.seed = seed
         self.max_depth = max_depth
         self.trees = None
+
+        random.seed(self.seed)
 
     def predict(self, X):
         """Generate predictions on training, validation or test set.
@@ -82,7 +84,7 @@ class RandomForest:
             X_sample = train_sample[:, :-1]
             y_sample = train_sample[:, -1]
 
-            # Learn decision tree from sampled training data.
+            # Learn decision tree from sampled training data and store in list.
             tree = self.fit_tree(X_sample, y_sample, depth=0)
             self.trees.append(tree)
 
@@ -95,6 +97,7 @@ class RandomForest:
         results = {'max_depth': self.max_depth,
                    'n_trees': self.n_trees,
                    'n_features': self.m,
+                   'random_seed' : self.seed,
                    'train_accuracy': train_accuracy,
                    'val_accuracy': val_accuracy,
                    'train_predictions': train_predictions,
@@ -182,7 +185,7 @@ class RandomForest:
             # Gini index from split is just weighted average of gini indices from left and right children.
             split_gini = prob_left * gini_left + prob_right * gini_right
 
-            # Update current gini value if the split is beneficial, save feature name associated with split.
+            # Update current gini value if the split is beneficial, save feature index associated with split.
             if split_gini < current_gini:
                 current_gini = split_gini
                 split_index = index

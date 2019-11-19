@@ -60,20 +60,10 @@ def _predict_rf(trees, X):
     Returns:
         rf_predictions (list): list of generated predictions from majority vote.
     """
-    # Store predictions for each tree.
+    # Store list of predictions for each tree in list.
     predictions = []
     for tree in trees:
-        tree_predictions = []
-        for observation in X:
-            node = tree
-            while node.left is not None:
-                if observation[node.feature_index] == 1:
-                    node = node.left
-                else:
-                    node = node.right
-            tree_predictions.append(node.predicted_class)
-        predictions.append(tree_predictions)
-
+        predictions.append(_predict(tree, X))
     # Zip together predictions for each instance from each tree to take majority vote.
     zipped = list(zip(*predictions))
     # Get tuple with number of votes for each class, i.e. (3, 2) means 3 votes for 0 and 2 votes for 1.

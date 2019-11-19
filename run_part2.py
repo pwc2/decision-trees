@@ -51,3 +51,22 @@ for m in [1, 2, 5, 10, 25, 50]:
         Path(output_path).mkdir()
     with open(training_file, 'w') as f:
         json.dump(results, f, indent=4)
+
+# Vary random seed with best parameters from models created above
+n = 15
+m = 25
+for s in range(1, 11):
+    # Create random forest with 15 trees, depth = 2, and n_features = 25 and save results in /model_output.
+    rf = RandomForest(train_set, validation_set, test_set, label='class', n_trees=n, n_features=m, seed=s, max_depth=2)
+    results = rf.train()
+
+    # Save output for learned model to .json file.
+    output_folder = Path('model_output/part2')
+    output_path = Path(__file__).parent.resolve().joinpath(output_folder)
+    training_file = output_path.joinpath(Path('rf_ntrees_15' + '_nfeat_' + str(rf.m) + '_seed_' + str(s) + '.json'))
+
+    # Create output directory if doesn't exist.
+    if not Path(output_path).exists():
+        Path(output_path).mkdir()
+    with open(training_file, 'w') as f:
+        json.dump(results, f, indent=4)
