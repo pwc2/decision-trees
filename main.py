@@ -8,4 +8,9 @@
 
 """
 
+import run_part1
+
+import run_part2
+
+import run_part3
 

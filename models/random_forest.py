@@ -6,10 +6,12 @@
     Python Version: 3.7
 
 """
+import random
+
 import numpy as np
+
 from models.functions import _gini, _predict_rf, _accuracy
 from models.node import Node
-import random
 
 
 class RandomForest:
@@ -78,12 +80,12 @@ class RandomForest:
         self.trees = []
 
         for _ in range(self.n_trees):
-            # Generate random sample with replacement from training set.
+            # Generate bootstrapped sample (random sample with replacement) from training set.
             train_sample = np.array(random.choices(self.train_set.to_numpy(), k=self.n_samples))
             X_sample = train_sample[:, :-1]
             y_sample = train_sample[:, -1]
 
-            # Learn decision tree from sampled training data and store in list.
+            # Learn decision tree from bootstrapped sample and store in list.
             tree = self.fit_tree(X_sample, y_sample, depth=0)
             self.trees.append(tree)
 

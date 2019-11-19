@@ -20,7 +20,6 @@ test_set = pd.read_csv('data/pa3_test.csv')
 
 # Run AdaBoost with varied number of base classifiers (L)
 for L in [1, 2, 5, 10, 15]:
-# for L in [5]:
     boosted_trees = BoostedTrees(train_set, validation_set, test_set, label='class', n_classifiers=L, max_depth=1)
     results = boosted_trees.train()
 

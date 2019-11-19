@@ -12,20 +12,24 @@ import random
 import numpy as np
 
 
-def _gini(y, n_classes):
-    """Calculate gini impurity for a node.
+def _gini(y, n_classes, weights=None):
+    """Calculate gini impurity for a node. If using AdaBoost, weights argument takes list or ndarray of weights
+    associated with the labels in y.
 
     Args:
         y (ndarray): labels for data at node.
         n_classes (int): number of classes.
-        boosted (bool): indicator for using boosted trees.
-        class_weights (list): if using boosted trees, list of total weight in each class at node.
+        weights (list): if using boosted trees, list of weights associated with y labels.
 
     Returns:
         gini_index (float): computed gini index.
     """
-    m = y.size
-    gini_index = 1 - sum((np.sum(y == i) / m) ** 2 for i in range(n_classes))
+    if weights is not None:
+        m = np.sum(weights * (y == 1)) + np.sum(weights * (y == 0))
+        gini_index = 1 - sum((np.sum(weights * (y == i)) / m) ** 2 for i in range(n_classes))
+    else:
+        m = y.size
+        gini_index = 1 - sum((np.sum(y == i) / m) ** 2 for i in range(n_classes))
     return gini_index
 
 
@@ -75,12 +79,13 @@ def _predict_rf(trees, X):
     return rf_predictions
 
 
-def _predict_adaboost(clfs, clf_alphas, X):
-    """Generates predictions from boosted trees (AdaBoost) for class labels on training, validation, or test sets.
+def _predict_adaboost(learners, alphas, X):
+    """Generates predictions for class labels from ensemble of boosted trees (AdaBoost) on training, validation,
+    or test sets.
 
     Args:
-        clfs (list): list of trained base classifiers.
-        clf_alphas (list): list of alphas from trained base classifiers.
+        learners (list): list of trained base classifiers.
+        alphas (list): list of alphas from trained base classifiers.
         X (ndarray): examples to generate predictions on.
 
     Returns:
@@ -88,10 +93,10 @@ def _predict_adaboost(clfs, clf_alphas, X):
     """
     N = np.size(X, axis=0)
     y = np.zeros(N)
-    for (clf, alpha) in zip(clfs, clf_alphas):
-        preds = _predict(clf, X)
+    for (learner, alpha) in zip(learners, alphas):
+        preds = _predict(learner, X)
         preds = np.array([-1 if y == 0 else 1 for y in preds])
-        y = y + alpha * preds
+        y += alpha * preds
     predictions = list(np.sign(y))
     # Convert class labels from {-1, 1} back to {0, 1}.
     predictions = [0 if y == -1 else 1 for y in predictions]
@@ -108,9 +113,6 @@ def _accuracy(predictions, labels):
     Returns:
         accuracy (float): calculated accuracy.
     """
-    # Ensure lists are coerced to ndarrays of integers.
-    predictions = np.array(predictions, dtype=int)
-    labels = np.array(labels, dtype=int)
-    correct = (labels == predictions)
-    acc = correct.sum() / np.size(correct)
-    return acc
+    correct = (predictions == labels)
+    accuracy = np.mean(correct)
+    return accuracy
