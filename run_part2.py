@@ -53,9 +53,9 @@ for m in [1, 2, 5, 10, 25, 50]:
 
 # Vary random seed with best parameters from models created above.
 n = 15
-m = 50
+m = 25
 for s in range(1, 11):
-    # Create random forest with 15 trees, depth = 2, and n_features = 50 and save results in /model_output.
+    # Create random forest with 15 trees, depth = 2, and n_features = 25 and save results in /model_output.
     rf = RandomForest(train_set, validation_set, test_set, label='class', n_trees=n, n_features=m, seed=s, max_depth=2)
     results = rf.train()
 
