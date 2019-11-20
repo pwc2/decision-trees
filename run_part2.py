@@ -7,6 +7,7 @@
 
 """
 import json
+import random
 from pathlib import Path
 
 import pandas as pd
@@ -54,7 +55,10 @@ for m in [1, 2, 5, 10, 25, 50]:
 # Vary random seed with best parameters from models created above.
 n = 15
 m = 25
-for s in range(1, 11):
+i = 1  # index to include in name of saved files
+random.seed(0)
+seeds = random.sample([x for x in range(10000)], k=10)
+for s in seeds:
     # Create random forest with 15 trees, depth = 2, and n_features = 25 and save results in /model_output.
     rf = RandomForest(train_set, validation_set, test_set, label='class', n_trees=n, n_features=m, seed=s, max_depth=2)
     results = rf.train()
@@ -62,10 +66,11 @@ for s in range(1, 11):
     # Save output for learned model to .json file.
     output_folder = Path('model_output/part2')
     output_path = Path(__file__).parent.resolve().joinpath(output_folder)
-    training_file = output_path.joinpath(Path('rf_ntrees_15' + '_nfeat_' + str(rf.m) + '_seed_' + str(s) + '.json'))
+    training_file = output_path.joinpath(Path('rf_ntrees_15' + '_nfeat_' + str(rf.m) + '_seed_' + str(i) + '.json'))
 
     # Create output directory if doesn't exist.
     if not Path(output_path).exists():
         Path(output_path).mkdir()
     with open(training_file, 'w') as f:
         json.dump(results, f, indent=4)
+    i += 1

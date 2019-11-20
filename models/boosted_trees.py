@@ -68,6 +68,7 @@ class BoostedTrees:
         y_train = self.train_labels.to_numpy()
         X_val = self.validation_features.to_numpy()
         y_val = self.validation_labels.to_numpy()
+        X_test = self.test_features.to_numpy()
 
         # Lists to store base classifiers and weights for each base classifier.
         L = self.n_classifiers
@@ -107,12 +108,16 @@ class BoostedTrees:
         train_accuracy = _accuracy(train_predictions, y_train)
         val_accuracy = _accuracy(val_predictions, y_val)
 
+        # Calculate predictions on unlabeled test set.
+        test_predictions = _predict_boost(base_classifiers, base_classifier_alphas, X_test)
+
         results = {'max_depth': self.max_depth,
                    'n_classifiers': self.n_classifiers,
                    'train_accuracy': train_accuracy,
                    'val_accuracy': val_accuracy,
                    'train_predictions': train_predictions,
-                   'val_predictions': val_predictions}
+                   'val_predictions': val_predictions,
+                   'test_predictions': test_predictions}
         return results
 
     def fit_tree(self, X, y, weights, depth=0):

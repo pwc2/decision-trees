@@ -6,6 +6,7 @@
     Python Version: 3.7
 
 """
+import csv
 import json
 from pathlib import Path
 
@@ -48,3 +49,11 @@ if not Path(output_path).exists():
     Path(output_path).mkdir()
 with open(training_file, 'w') as f:
     json.dump(results, f, indent=4)
+
+# Write test set predictions to csv.
+test_predictions = results['test_predictions']
+prediction_file = output_path.joinpath(Path('pa3label.csv'))
+with open(prediction_file, 'w') as fp:
+    writer = csv.writer(fp)
+    for i in test_predictions:
+        writer.writerows([[i]])
