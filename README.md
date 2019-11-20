@@ -52,7 +52,8 @@ train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
 test_set = pd.read_csv('data/pa3_test.csv')
 
-boosted_trees = BoostedTrees(train=train_set, validation=validation_set, test=test_set, label='class', n_classifiers=5, max_depth=2)
+boosted_trees = BoostedTrees(train=train_set, validation=validation_set, test=test_set, label='class', 
+                                n_classifiers=5, max_depth=2)
 results = boosted_trees.train()
 ```
 
