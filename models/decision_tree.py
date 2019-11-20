@@ -2,7 +2,7 @@
     File name: decision_tree.py
     Author: Patrick Cummings
     Date created: 11/16/2019
-    Date last modified: 11/17/2019
+    Date last modified: 11/19/2019
     Python Version: 3.7
 
 """
@@ -31,11 +31,12 @@ class DecisionTree:
             None
         """
         # Extract features and labels from data sets
+        self.train_set = train
         self.train_features = train.drop(label, axis=1)
         self.train_labels = train[label]
         self.validation_features = validation.drop(label, axis=1)
         self.validation_labels = validation[label]
-        self.test_features = test
+        self.test_set = test
 
         self.n_classes = len(set(self.train_labels))
         self.n_features = np.size(self.train_features.to_numpy(), axis=1)
@@ -129,6 +130,7 @@ class DecisionTree:
         if y.size <= 1:
             return None, None
 
+        # Current node impurity prior to splitting.
         current_gini = _gini(y, self.n_classes)
 
         # Iterate through all features and calculate gini impurity from resulting split.

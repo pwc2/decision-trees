@@ -2,7 +2,7 @@
     File name: random_forest.py
     Author: Patrick Cummings
     Date created: 11/16/2019
-    Date last modified: 11/17/2019
+    Date last modified: 11/19/2019
     Python Version: 3.7
 
 """
@@ -152,6 +152,7 @@ class RandomForest:
         if y.size <= 1:
             return None, None
 
+        # Current node impurity prior to splitting.
         current_gini = _gini(y, self.n_classes)
 
         # Sample indices for features without replacement to find best split on.

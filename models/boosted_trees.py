@@ -2,14 +2,13 @@
     File name: boosted_trees.py
     Author: Patrick Cummings
     Date created: 11/18/2019
-    Date last modified: 11/18/2019
+    Date last modified: 11/19/2019
     Python Version: 3.7
 
 """
-
 import numpy as np
 
-from models.functions import _gini, _predict, _predict_adaboost, _accuracy
+from models.functions import _gini, _predict, _predict_boost, _accuracy
 from models.node import Node
 
 
@@ -103,8 +102,8 @@ class BoostedTrees:
             base_classifier_alphas.append(alpha)
 
         # Calculate predictions and accuracy on train and validation sets.
-        train_predictions = _predict_adaboost(base_classifiers, base_classifier_alphas, X_train)
-        val_predictions = _predict_adaboost(base_classifiers, base_classifier_alphas, X_val)
+        train_predictions = _predict_boost(base_classifiers, base_classifier_alphas, X_train)
+        val_predictions = _predict_boost(base_classifiers, base_classifier_alphas, X_val)
         train_accuracy = _accuracy(train_predictions, y_train)
         val_accuracy = _accuracy(val_predictions, y_val)
 

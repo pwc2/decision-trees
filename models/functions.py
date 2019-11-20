@@ -2,11 +2,10 @@
     File name: functions.py
     Author: Patrick Cummings
     Date created: 11/16/2019
-    Date last modified: 11/17/2019
+    Date last modified: 11/19/2019
     Python Version: 3.7
 
 """
-
 import random
 
 import numpy as np
@@ -79,7 +78,7 @@ def _predict_rf(trees, X):
     return rf_predictions
 
 
-def _predict_adaboost(learners, alphas, X):
+def _predict_boost(learners, alphas, X):
     """Generates predictions for class labels from ensemble of boosted trees (AdaBoost) on training, validation,
     or test sets.
 
@@ -95,6 +94,7 @@ def _predict_adaboost(learners, alphas, X):
     y = np.zeros(N)
     for (learner, alpha) in zip(learners, alphas):
         preds = _predict(learner, X)
+        # Convert predicted classes from {0, 1} to {-1, 1}
         preds = np.array([-1 if y == 0 else 1 for y in preds])
         y += alpha * preds
     predictions = list(np.sign(y))

@@ -2,11 +2,10 @@
     File name: run_part1.py
     Author: Patrick Cummings
     Date created: 11/16/2019
-    Date last modified: 11/17/2019
+    Date last modified: 11/19/2019
     Python Version: 3.7
 
 """
-
 import json
 from pathlib import Path
 

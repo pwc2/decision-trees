@@ -14,9 +14,10 @@ class Node:
 
     """
 
-    def __init__(self, n, class_distribution, gini_index, boost=False):
-        """Constructs node object with number of observations at node, a list with the count of observations in each
-        class at node, and gini impurity at node.
+    def __init__(self, n, class_distribution, gini_index):
+        """Constructs node object with the number of observations at node, a list with the count of observations in each
+        class at node for DecisionTree and RandomForest, for BoostedTrees this will be weighted class sums, and the gini
+        impurity at node.
 
         Args:
             n (int): sample size of data at node.
