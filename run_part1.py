@@ -17,6 +17,11 @@ train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
 test_set = pd.read_csv('data/pa3_test.csv')
 
+# Drop 'veil-type_p', feature has value 1 for all instances.
+train_set = train_set.drop('veil-type_p', axis=1)
+validation_set = validation_set.drop('veil-type_p', axis=1)
+test_set = test_set.drop('veil-type_p', axis=1)
+
 # Create trees with depths from 1 to 8 inclusive and save results in /model_output.
 for depth in range(1, 9):
     tree = DecisionTree(train_set, validation_set, test_set, label='class', max_depth=depth)

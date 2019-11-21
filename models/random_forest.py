@@ -19,7 +19,7 @@ class RandomForest:
 
     """
 
-    def __init__(self, train, validation, test, label, n_trees, n_features, seed=1, max_depth=None):
+    def __init__(self, train, validation, test, label, n_trees, n_features, seed=None, max_depth=None):
         """Constructs RandomForest object.
 
         Args:
