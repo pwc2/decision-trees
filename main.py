@@ -7,9 +7,9 @@
     Python Version: 3.7
 
 """
-from run import run_part1
+import run_part1
 print('Part 1: decision trees, complete.')
-from run import run_part2
+import run_part2
 print('Part 2: random forests, complete.')
-from run import run_part3
+import run_part3
 print('Part 3: boosted trees, complete.')
