@@ -7,9 +7,12 @@
     Python Version: 3.7
 
 """
+print('Part 1: decision trees, running.')
 import run_part1
 print('Part 1: decision trees, complete.')
+print('Part 2: random forests, running.')
 import run_part2
 print('Part 2: random forests, complete.')
+print('Part 3: boosted trees, running.')
 import run_part3
 print('Part 3: boosted trees, complete.')
