@@ -2,7 +2,7 @@
     File name: run_part3.py
     Author: Patrick Cummings
     Date created: 11/18/2019
-    Date last modified: 11/19/2019
+    Date last modified: 11/24/2019
     Python Version: 3.7
 
 """
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from models.boosted_trees import BoostedTrees
+from models.adaboost import AdaBoostClassifier
 
 train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
@@ -25,7 +25,7 @@ test_set = test_set.drop('veil-type_p', axis=1)
 
 # Run AdaBoost with varied number of base classifiers (L).
 for L in [1, 2, 5, 10, 15]:
-    boosted_trees = BoostedTrees(train_set, validation_set, test_set, label='class', n_classifiers=L, max_depth=1)
+    boosted_trees = AdaBoostClassifier(train_set, validation_set, test_set, label='class', n_classifiers=L, max_depth=1)
     results = boosted_trees.train()
 
     # Save output for learned model to .json file.
@@ -41,7 +41,7 @@ for L in [1, 2, 5, 10, 15]:
 
 # Run AdaBoost with L = 6 and max depth = 2.
 L = 6
-boosted_trees = BoostedTrees(train_set, validation_set, test_set, label='class', n_classifiers=L, max_depth=2)
+boosted_trees = AdaBoostClassifier(train_set, validation_set, test_set, label='class', n_classifiers=L, max_depth=2)
 results = boosted_trees.train()
 
 # Save output for learned model to .json file.

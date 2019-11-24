@@ -15,13 +15,14 @@
 ```python
 import pandas as pd
 
-from models.decision_tree import DecisionTree
+from models.decision_tree import DecisionTreeClassifier
 
 train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
 test_set = pd.read_csv('data/pa3_test.csv')
 
-tree = DecisionTree(train=train_set, validation=validation_set,test=test_set, label='class', max_depth=2)
+tree = DecisionTreeClassifier(train=train_set, validation=validation_set,test=test_set, 
+                                label='class', max_depth=2)
 results = tree.train()
 ```
 
@@ -30,14 +31,14 @@ results = tree.train()
 ```python
 import pandas as pd
 
-from models.random_forest import RandomForest
+from models.random_forest import RandomForestClassifier
 
 train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
 test_set = pd.read_csv('data/pa3_test.csv')
 
-rf = RandomForest(train=train_set, validation=validation_set, test=test_set, label='class', n_trees=5, 
-                    n_features=5, seed=1, max_depth=2)
+rf = RandomForestClassifier(train=train_set, validation=validation_set, test=test_set,
+                             label='class', n_trees=5, n_features=5, seed=1, max_depth=2)
 results = rf.train()
 ```
 
@@ -46,14 +47,14 @@ results = rf.train()
 ```python
 import pandas as pd
 
-from models.boosted_trees import BoostedTrees
+from models.adaboost import AdaBoostClassifier
 
 train_set = pd.read_csv('data/pa3_train.csv')
 validation_set = pd.read_csv('data/pa3_val.csv')
 test_set = pd.read_csv('data/pa3_test.csv')
 
-boosted_trees = BoostedTrees(train=train_set, validation=validation_set, test=test_set, label='class', 
-                                n_classifiers=5, max_depth=2)
+boosted_trees = AdaBoostClassifier(train=train_set, validation=validation_set, test=test_set,
+                                     label='class', n_classifiers=5, max_depth=2)
 results = boosted_trees.train()
 ```
 
@@ -68,3 +69,7 @@ The `data/` folder contains .csv files with training, validation, and test sets.
 - `run_part3.py` creates boosted trees with varied parameters.
 
 `python main.py` will run all three parts in order, output will be saved in `model_output` folder.
+
+### Future improvements:
+
+- Refactor `AdaBoostClassifier` and `RandomForestClassifier` classes to inherit attributes from `DecisionTreeClassifier` class.

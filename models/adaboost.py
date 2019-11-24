@@ -1,8 +1,8 @@
 """
-    File name: boosted_trees.py
+    File name: adaboost.py
     Author: Patrick Cummings
     Date created: 11/18/2019
-    Date last modified: 11/19/2019
+    Date last modified: 11/24/2019
     Python Version: 3.7
 
 """
@@ -12,7 +12,7 @@ from models.functions import _gini, _predict, _predict_boost, _accuracy
 from models.node import Node
 
 
-class BoostedTrees:
+class AdaBoostClassifier:
     """Class to construct decision tree object with AdaBoost.
 
     """

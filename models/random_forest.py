@@ -2,7 +2,7 @@
     File name: random_forest.py
     Author: Patrick Cummings
     Date created: 11/16/2019
-    Date last modified: 11/19/2019
+    Date last modified: 11/24/2019
     Python Version: 3.7
 
 """
@@ -14,7 +14,7 @@ from models.functions import _gini, _predict_rf, _accuracy
 from models.node import Node
 
 
-class RandomForest:
+class RandomForestClassifier:
     """Class to construct RandomForest object.
 
     """
